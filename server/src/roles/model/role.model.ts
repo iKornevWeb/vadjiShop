@@ -1,7 +1,15 @@
 
- import { Model, Column, DataType, Table, BelongsToMany } from "sequelize-typescript";
-@Table
-export class Role extends Model<Role> {
+import { Model, Column, DataType, Table, BelongsToMany } from "sequelize-typescript";
+
+import { User } from "src/users/model/user.model";
+import { UserRoles } from "./user-roles.model";
+
+interface RolesRequireFields {
+   value: string;
+   description: string;
+}
+@Table({ tableName: 'roles' })
+export class Role extends Model<Role, RolesRequireFields> {
 
    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
    id: number;

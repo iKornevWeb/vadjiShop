@@ -1,15 +1,18 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table, BelongsToMany } from 'sequelize-typescript';
+
+import { Role } from 'src/roles/model/role.model';
+import { UserRoles } from 'src/roles/model/user-roles.model';
 
 interface UserRequireField {
-    email: string;
-    password: string;
+   email: string;
+   password: string;
 }
 
-@Table
+@Table({ tableName: 'users' })
 export class User extends Model<User, UserRequireField> {
    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
    id: number;
-   
+
    @Column({ type: DataType.STRING, allowNull: false })
    email: string;
 
@@ -24,4 +27,7 @@ export class User extends Model<User, UserRequireField> {
 
    @Column({ type: DataType.STRING })
    surname: string;
+
+   @BelongsToMany(() => Role, () => UserRoles)
+   roles: Role[];
 }
