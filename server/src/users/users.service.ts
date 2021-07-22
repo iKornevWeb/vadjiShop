@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './model/user.model';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
 
-  findAll() {
-    return `This action returns all users`;
-  }
+   constructor(
+      @InjectModel(User)
+      private userModel: typeof User
+   ) { }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+   async create(createUserDto: CreateUserDto): Promise<User> {
+      const user = await this.userModel.create(createUserDto);
+      return user;
+   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+   async findAll(): Promise<User[]> {
+      return await this.userModel.findAll<User>();
+   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+   async findOne(id: number): Promise<User> {
+       return await this.userModel.findByPk<User>(id);
+
+   }
+
+   async update(id: number, updateUserDto: UpdateUserDto) {
+      return await this.userModel.update(updateUserDto, {where: {id: id}})
+   }
+
+   async remove(id: number) {
+      return await this.userModel.destroy({where:{id: id}});
+   }
 }
